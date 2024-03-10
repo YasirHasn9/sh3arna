@@ -3,7 +3,7 @@ import Logging from './logging';
 import config from 'config';
 
 export async function connect(): Promise<void> {
-  const dbUri: string = config.get('mongo.uri');
+  const dbUri = config.get<string>('mongo.uri');
   try {
     await mongoose.connect(dbUri);
     Logging.info('Connected to the database');

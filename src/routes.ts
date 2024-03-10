@@ -1,4 +1,5 @@
 import { Express } from 'express';
+import userRouter from '@src/routers/user.router';
 
 export function routes(app: Express): void {
   /**
@@ -27,4 +28,6 @@ export function routes(app: Express): void {
       environment: process.env.NODE_ENV,
     });
   });
+
+  app.use('/api/users', userRouter);
 }

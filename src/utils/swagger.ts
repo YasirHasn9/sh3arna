@@ -1,6 +1,3 @@
-// this is going to be the about swagger files creation
-
-// 1. create swagger spec by using the swagger jsonDoc and pass the options
 import { Express } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -12,7 +9,7 @@ const options: swaggerJsdoc.Options = {
   swaggerDefinition: {
     openapi: '3.0.0',
     info: {
-      title: 'Sh3aran Swagger documentation',
+      title: 'Sh3arna API Documentation',
       version: version,
     },
     servers: [
@@ -21,7 +18,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/routes.ts'],
+  apis: ['./src/routes.ts', './src/controllers/**.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

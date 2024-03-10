@@ -3,4 +3,5 @@ export default {
   mongo: {
     uri: process.env.MONGO_URL,
   },
+  saltRounds: Number(process.env.SALT_ROUNDS),
 };

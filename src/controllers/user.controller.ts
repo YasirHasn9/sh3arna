@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { userService } from '@src/services/user.service';
 import Logger from '@src/utils/logging';
+import { ErrorCodes } from '@src/errorCodes';
 
 /**
  * @openapi
@@ -72,11 +73,9 @@ const register = async (req: Request, res: Response): Promise<void> => {
     const user = await userService.create(body);
     res.status(201).json(user).end();
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      Logger.error(err.message);
-      res.status(400).json({ errorMessage: err.message });
+    if (err instanceof Error && err.message === ErrorCodes.UserAlreadyExists) {
+      res.status(409).json({ errorMessage: 'User is already existed' });
     }
-
     Logger.error(`[Controller]: register
                   [Error]: ${err}`);
     res.status(500).json({ errorMessage: 'Internal server error' });
@@ -97,7 +96,6 @@ const getUsers = async (_req: Request, res: Response): Promise<void> => {
     res.status(500).json({ errorMessage: 'Internal server error' });
   }
 };
-
 export const userController = {
   register,
   getUsers,

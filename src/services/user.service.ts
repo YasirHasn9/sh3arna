@@ -2,19 +2,18 @@ import UserModel from '@src/models/user.model';
 import { omit } from 'lodash';
 import Logger from '@src/utils/logging';
 import { IUser } from '@src/types/types';
+import { ErrorCodes } from '@src/errorCodes';
 
 export const create = async (input: IUser): Promise<Partial<IUser>> => {
   try {
     const user = await UserModel.create(input);
     return omit(user.toJSON(), ['password']);
   } catch (err: unknown) {
-    // maybe here where I can find the type of error I need when creating a new user
-    if (err instanceof Error) {
-      Logger.error(err.message);
-    } else {
-      Logger.error(`Failed to create user: ${JSON.stringify(err)}`);
+    if ((err as any).code === 11000) {
+      throw new Error(ErrorCodes.UserAlreadyExists);
     }
-    throw new Error(`User creation failed: ${(err as any).code}`);
+
+    throw new Error(`User creation failed: ${err}`);
   }
 };
 
@@ -25,10 +24,8 @@ const getUsers = async (): Promise<IUser[]> => {
   } catch (err: unknown) {
     if (err instanceof Error) {
       Logger.error(err.message);
-    } else {
-      Logger.error(`Failed to create user: ${JSON.stringify(err)}`);
     }
-    throw new Error(`User creation failed: ${err}`);
+    throw new Error(`User getting failed: ${err}`);
   }
 };
 

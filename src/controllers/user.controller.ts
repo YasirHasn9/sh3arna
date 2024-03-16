@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { userService } from '@src/2_services/user.service';
+import { userService } from '@src/services/user.service';
 import Logger from '@src/utils/logging';
 
 /**

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createUser } from '@src/services/user.service';
+import { userService } from '@src/2_services/user.service';
 import Logger from '@src/utils/logging';
 
 /**
@@ -66,17 +66,33 @@ import Logger from '@src/utils/logging';
  *       500:
  *         description: Internal server error
  */
-export const register = async (req: Request, res: Response): Promise<void> => {
+const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const { body } = req;
-    const user = await createUser(body);
-    res.status(201).json(user);
+    const user = await userService.create(body);
+    res.status(201).json(user).end();
   } catch (err: unknown) {
     if (err instanceof Error) {
       Logger.error(err.message);
       res.status(400).json({ errorMessage: err.message });
     }
-    Logger.error(`[Controller]: ReigsterUser
+
+    Logger.error(`[Controller]: register
+                  [Error]: ${err}`);
+    res.status(500).json({ errorMessage: 'Internal server error' });
+  }
+};
+
+const getUsers = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const users = await userService.getUsers();
+    res.status(200).json(users);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      Logger.error(err.message);
+      res.status(400).json({ errorMessage: err.message });
+    }
+    Logger.error(`[Controller]: getUsers
                   [Error]: ${err}`);
     res.status(500).json({ errorMessage: 'Internal server error' });
   }
@@ -84,4 +100,5 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const userController = {
   register,
+  getUsers,
 };
